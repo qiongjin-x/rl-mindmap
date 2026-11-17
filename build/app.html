@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>强化学习的数学原理 · 复盘思维导图</title>
+<!-- KaTeX v0.16.11 (MIT) 已内嵌，离线可用 · https://katex.org -->
+<!--KATEX_CSS-->
+<style>
+:root{
+  --bg:#f4f6f9;
+  --paper:#fff;
+  --ink:#161d29;
+  --ink-2:#41505f;
+  --ink-3:#76839a;
+  --hair:#e3e8ef;
+  --hair-2:#eef1f6;
+  --shadow:0 1px 2px rgba(16,24,40,.05), 0 10px 26px rgba(16,24,40,.055);
+  --shadow-lg:0 18px 50px rgba(16,24,40,.16);
+  --radius:14px;
+  --c-concept:#2f6f9f;
+  --c-algo:#b45309;
+  --c-formula:#6d43b8;
+  --branch:#c9d4e3;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:15px; line-height:1.7; -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:radial-gradient(rgba(37,99,168,.055) 1px, transparent 1px);
+  background-size:22px 22px;
+}
+h1,h2,h3,p,ul{margin:0}
+button{font-family:inherit}
+
+/* -------- topbar -------- */
+.topbar{
+  position:sticky; top:0; z-index:60; border-bottom:1px solid var(--hair);
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(16px) saturate(1.5); -webkit-backdrop-filter:blur(16px) saturate(1.5);
+}
+.topbar-in{max-width:1320px; margin:0 auto; padding:9px 26px; display:flex; align-items:center; gap:16px}
+.brand{display:flex; align-items:center; gap:10px; min-width:0}
+.mark{
+  width:28px;height:28px;border-radius:8px;flex:0 0 auto;position:relative;
+  background:linear-gradient(145deg,#2563a8,#6d43b8); box-shadow:0 2px 6px rgba(37,99,168,.32);
+}
+.mark::before,.mark::after{content:'';position:absolute;left:6px;width:16px;height:1.5px;background:rgba(255,255,255,.92);border-radius:2px}
+.mark::before{top:9px}
+.mark::after{top:14px;box-shadow:0 5px 0 rgba(255,255,255,.92)}
+.brand-txt{min-width:0}
+.brand h1{font-size:14.5px; font-weight:650; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.brand p{font-size:11px; color:var(--ink-3); letter-spacing:.03em; margin-top:1px}
+
+.tabs{display:flex; background:#eceff4; border-radius:10px; padding:3px; flex:0 0 auto}
+.tab{
+  border:0; background:transparent; padding:6px 14px; border-radius:8px; font-size:13px;
+  font-weight:500; color:var(--ink-2); cursor:pointer; white-space:nowrap;
+  transition:background .16s,color .16s,box-shadow .16s;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{background:#fff; color:var(--ink); box-shadow:0 1px 2px rgba(16,24,40,.14)}
+
+.tools{display:flex; align-items:center; gap:7px; margin-left:auto; flex:0 0 auto}
+.search{position:relative}
+.search input{
+  width:200px; padding:6px 11px 6px 29px; border:1px solid var(--hair); border-radius:8px;
+  background:#fff; font:inherit; font-size:12.5px; color:var(--ink); outline:none;
+  transition:border-color .16s,box-shadow .16s,width .18s;
+}
+.search input:focus{border-color:#a8c6ef; box-shadow:0 0 0 3px rgba(37,99,168,.11); width:240px}
+.search .ico{position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:12px; color:#9aa6b6; pointer-events:none}
+.hits{font-size:11px; color:var(--ink-3); min-width:46px; text-align:right}
+.btn{
+  border:1px solid var(--hair); background:#fff; color:var(--ink-2); padding:5px 10px;
+  border-radius:8px; font-size:12px; cursor:pointer; white-space:nowrap;
+  transition:border-color .16s,color .16s,background .16s;
+}
+.btn:hover{border-color:#c7d2e0; color:var(--ink); background:#fbfcfd}
+.zoomer{display:flex; align-items:center; border:1px solid var(--hair); border-radius:8px; overflow:hidden; background:#fff}
+.zoomer button{border:0; background:transparent; width:24px; height:26px; cursor:pointer; color:var(--ink-2); font-size:13px; line-height:1}
+.zoomer button:hover{background:#f3f6fa}
+.zoomer .zv{font-size:11px; color:var(--ink-3); min-width:34px; text-align:center; border-left:1px solid var(--hair); border-right:1px solid var(--hair); line-height:26px}
+
+/* -------- shell -------- */
+.wrap{position:relative; z-index:1; max-width:1320px; margin:0 auto; padding:20px 26px 120px}
+.view{display:none}
+.view.on{display:block; animation:fade .2s ease}
+@keyframes fade{from{opacity:0; transform:translateY(3px)}to{opacity:1; transform:none}}
+
+.board-head{margin:0 0 14px}
+.board-head h2{font-size:12px; font-weight:600; letter-spacing:.15em; color:var(--ink-3); text-transform:uppercase}
+.board-head p{font-size:12.5px; color:var(--ink-3); margin-top:5px; line-height:1.65}
+.board-head b{color:var(--ink-2); font-weight:600}
+
+/* -------- map -------- */
+.map-hint{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;
+  font-size:11.5px; color:var(--ink-3);
+}
+.legend{display:flex; gap:12px; align-items:center}
+.legend i{display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:4px; vertical-align:1px}
+.map-scroll{overflow-x:auto; padding:4px 2px 20px}
+.map-canvas{display:inline-block; min-width:100%; padding:14px 10px 20px 0}
+.map-canvas > .mnode{align-items:flex-start}
+
+.mnode{display:flex; align-items:center}
+.mlab{flex:0 0 auto}
+.mkids{display:flex; flex-direction:column; justify-content:center; padding-left:30px}
+.mkids>.mnode{position:relative; margin:4px 0}
+.mkids>.mnode::before{content:''; position:absolute; left:-30px; top:0; bottom:0; width:1px; background:var(--branch)}
+.mkids>.mnode:last-child::before{bottom:50%}
+.mkids>.mnode:only-child::before{display:none}
+.mkids>.mnode::after{content:''; position:absolute; left:-30px; top:50%; width:30px; height:1px; background:var(--branch)}
+.map-canvas>.mnode>.root-card{position:relative; margin-right:4px}
+
+.root-card{
+  width:158px; padding:16px 14px; border-radius:14px; color:#fff;
+  background:linear-gradient(150deg,#1f4f80,#5b3a9e);
+  box-shadow:0 10px 26px rgba(37,60,120,.28);
+}
+.root-card .k{font-size:10px; letter-spacing:.18em; opacity:.75}
+.root-card h3{font-size:15px; line-height:1.45; margin-top:6px; font-weight:650}
+.root-card .n{font-size:11px; opacity:.72; margin-top:8px}
+
+.chap-card{
+  width:176px; padding:11px 12px; border-radius:11px; background:#fff; cursor:pointer;
+  border:1px solid var(--hair); border-left:3px solid var(--c); box-shadow:var(--shadow);
+  transition:transform .15s, box-shadow .15s;
+}
+.chap-card:hover{transform:translateX(2px); box-shadow:0 8px 20px rgba(16,24,40,.1)}
+.chap-card .n{
+  font-family:ui-monospace,Consolas,monospace; font-size:10px; letter-spacing:.12em;
+  color:var(--c); font-weight:600;
+}
+.chap-card .t{font-size:13.5px; font-weight:650; line-height:1.35; margin-top:2px}
+.chap-card .s{font-size:10.5px; color:var(--ink-3); line-height:1.5; margin-top:3px}
+
+.chip{
+  width:300px; padding:5px 9px 6px; border-radius:9px; background:#fff; cursor:pointer;
+  border:1px solid var(--hair); border-left:2px solid var(--kc);
+  transition:transform .13s, box-shadow .13s, border-color .13s, opacity .2s;
+}
+.chip:hover{transform:translateX(3px); box-shadow:0 6px 16px rgba(16,24,40,.1); border-color:#cfd9e6}
+.chip .cn{font-size:12.5px; font-weight:600; color:var(--ink); line-height:1.35; display:flex; align-items:baseline; gap:5px}
+.chip .cn em{font-style:normal; font-size:9.5px; font-weight:500; color:var(--kc); border:1px solid currentColor; border-radius:4px; padding:0 4px; flex:0 0 auto; opacity:.8; line-height:1.55}
+.chip .cb{font-size:10.5px; color:var(--ink-3); line-height:1.45; margin-top:1px}
+.chip sub,.chip sup{font-size:.74em}
+.chip.dim{opacity:.22}
+.chip.hit{border-color:#f0b429; box-shadow:0 0 0 3px rgba(240,180,41,.18)}
+.map-canvas.compact .chip .cb{display:none}
+.map-canvas.compact .chip{padding:3px 9px}
+.map-canvas.compact .chap-card .s{display:none}
+.map-canvas.compact .mkids>.mnode{margin:2.5px 0}
+
+/* -------- chapter view -------- */
+.chap{margin:0 0 18px; background:#fff; border:1px solid var(--hair); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; position:relative}
+.chap::before{content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--c)}
+.chap-head{display:flex; align-items:center; gap:12px; padding:14px 20px 12px 24px; cursor:pointer}
+.num{flex:0 0 auto; font-family:ui-monospace,Consolas,monospace; font-size:11.5px; font-weight:600; letter-spacing:.08em; color:var(--c); background:rgba(0,0,0,.03); border:1px solid currentColor; border-radius:6px; padding:3px 7px; line-height:1; opacity:.9}
+.ch-title{font-size:17px; font-weight:650}
+.ch-en{font-size:10.5px; color:var(--ink-3); letter-spacing:.04em; text-transform:uppercase; margin-top:1px}
+.ch-note{font-size:11.5px; color:var(--ink-3); margin-left:auto; text-align:right; max-width:46%}
+.chap.closed .ch-note{display:none}
+.chap-body{padding:0 20px 14px 24px}
+.chap.closed .chap-body{display:none}
+.chev{margin-left:8px; color:#aab4c2; font-size:11px; transition:transform .2s}
+.chap.closed .chev{transform:rotate(-90deg)}
+
+.cnode{padding:9px 0; border-top:1px dashed var(--hair)}
+.cnode:first-child{border-top:0}
+.cnode-h{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; cursor:pointer}
+.cnode-h b{font-size:13.5px; font-weight:650}
+.kp{font-size:10px; border-radius:4px; padding:0 5px; border:1px solid currentColor; flex:0 0 auto; opacity:.85}
+.cnode-h .more{margin-left:auto; font-size:10.5px; color:#9aa6b6}
+.cnode-h:hover .more{color:var(--c-concept)}
+.cnode p{font-size:12px; color:var(--ink-3); margin-top:2px}
+.cnode ul{margin:5px 0 0 0; padding-left:15px}
+.cnode li{font-size:12.5px; color:var(--ink-2); line-height:1.65; margin:1px 0}
+.cnode li::marker{color:#c3ccd9}
+
+/* -------- track view -------- */
+.lane{background:#fff; border:1px solid var(--hair); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px 18px 18px; margin-bottom:16px}
+.lane-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:12px}
+.lane-idx{font-family:ui-monospace,Consolas,monospace; font-size:10.5px; letter-spacing:.1em; color:#fff; background:var(--lc); border-radius:5px; padding:2px 6px}
+.lane-head h3{font-size:15px; font-weight:650}
+.lane-head p{font-size:11.5px; color:var(--ink-3)}
+.chain{display:flex; align-items:stretch; flex-wrap:wrap}
+.step{flex:1 1 210px; min-width:190px; background:#fcfdfe; border:1px solid var(--hair); border-top:3px solid var(--c); border-radius:9px; padding:9px 11px}
+.step .sn{font-family:ui-monospace,Consolas,monospace; font-size:10px; letter-spacing:.1em; color:var(--c); font-weight:600}
+.step .st{font-size:13px; font-weight:650; margin-top:1px}
+.step .sl{font-size:10.5px; color:var(--ink-3); margin-top:1px}
+.step .stags{display:flex; flex-wrap:wrap; gap:4px; margin-top:6px}
+.stag{font-size:10.5px; color:var(--ink-2); background:#fff; border:1px solid var(--hair); border-radius:5px; padding:1px 5px; cursor:pointer; transition:border-color .14s,color .14s}
+.stag:hover{border-color:#b9c8db; color:var(--ink)}
+.bridge{flex:0 0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 7px; min-width:92px}
+.bridge .lab{font-size:10.5px; color:#6b7a8d; text-align:center; line-height:1.4; background:#fff; padding:1px 4px; border-radius:4px}
+.bridge .arw{width:100%; min-width:56px; height:1px; background:#c6d0dd; position:relative; margin-top:6px}
+.bridge .arw::after{content:''; position:absolute; right:-1px; top:-3px; width:0; height:0; border-left:5px solid #c6d0dd; border-top:3.5px solid transparent; border-bottom:3.5px solid transparent}
+
+/* -------- drawer -------- */
+.scrim{position:fixed; inset:0; background:rgba(16,24,40,.34); opacity:0; pointer-events:none; transition:opacity .22s; z-index:80}
+.scrim.on{opacity:1; pointer-events:auto}
+.drawer{
+  position:fixed; top:0; right:0; bottom:0; width:480px; max-width:92vw; background:#fff; z-index:90;
+  transform:translateX(102%); transition:transform .26s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column; box-shadow:var(--shadow-lg);
+}
+.drawer.on{transform:none}
+.dr-head{padding:16px 20px 13px; border-bottom:1px solid var(--hair); display:flex; align-items:flex-start; gap:10px}
+.dr-head .kp{margin-top:3px}
+.dr-head h3{font-size:17px; font-weight:700; line-height:1.4; flex:1}
+.dr-x{border:0; background:#f2f5f9; width:26px; height:26px; border-radius:7px; cursor:pointer; color:var(--ink-2); font-size:15px; line-height:1; flex:0 0 auto}
+.dr-x:hover{background:#e6ebf2}
+.dr-body{padding:16px 20px 40px; overflow-y:auto; flex:1}
+.dr-brief{font-size:13px; color:var(--ink-2); background:#f7f9fc; border-left:2px solid var(--kc); border-radius:0 8px 8px 0; padding:8px 12px; line-height:1.7}
+.dr-meta{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
+.dr-meta span{font-size:10.5px; color:var(--ink-3); border:1px solid var(--hair); border-radius:5px; padding:1px 6px; background:#fbfcfd}
+.sec-t{font-size:11px; font-weight:650; letter-spacing:.1em; color:var(--ink-3); text-transform:uppercase; margin:18px 0 7px; padding-bottom:4px; border-bottom:1px solid var(--hair-2)}
+.dr-body ul{padding-left:17px; margin:0}
+.dr-body li{font-size:13px; color:var(--ink-2); line-height:1.75; margin:2px 0}
+.dr-body li::marker{color:#c3ccd9}
+.fml{
+  background:#fbfcfe; border:1px solid var(--hair-2); border-radius:9px;
+  padding:9px 12px; margin:7px 0; overflow-x:auto; text-align:center;
+}
+.fml .katex{font-size:1.02em}
+.rel{display:flex; flex-wrap:wrap; gap:6px}
+.rel button{font-size:11.5px; border:1px solid var(--hair); background:#fff; color:var(--ink-2); border-radius:6px; padding:2px 8px; cursor:pointer}
+.rel button:hover{border-color:#b9c8db; color:var(--ink)}
+
+/* -------- responsive -------- */
+@media (max-width:1180px){ .tools .search input{width:150px} }
+@media (max-width:900px){
+  .topbar-in{flex-wrap:wrap; gap:8px; padding:8px 14px}
+  .tools{width:100%; margin-left:0}
+  .search{flex:1}
+  .search input,.search input:focus{width:100%}
+  .wrap{padding:14px 14px 100px}
+  .chip{width:250px}
+  .ch-note{display:none}
+  .drawer{width:100%; max-width:100%}
+}
+
+@media print{
+  .topbar,.scrim,.drawer,.btn,.zoomer,.hits{display:none!important}
+  body::before{display:none}
+  .wrap{max-width:none; padding:0}
+  .chap{box-shadow:none; break-inside:avoid}
+  .chap.closed .chap-body{display:block}
+  .view{display:block!important}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <div class="mark"></div>
+      <div class="brand-txt">
+        <h1>强化学习的数学原理 · 复盘思维导图</h1>
+        <p id="subtitle">赵世钰｜10 章脉络</p>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab on" data-view="map">概要全图</button>
+      <button class="tab" data-view="chap">章节视图</button>
+      <button class="tab" data-view="track">主线视图</button>
+    </nav>
+    <div class="tools">
+      <div class="search">
+        <span class="ico">⌕</span>
+        <input id="q" type="search" placeholder="搜索概念 / 算法" />
+      </div>
+      <span class="hits" id="hits"></span>
+      <div class="zoomer">
+        <button id="zoomOut" title="缩小">−</button>
+        <span class="zv" id="zoomVal">100%</span>
+        <button id="zoomIn" title="放大">+</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="view on" id="view-map">
+    <div class="board-head">
+      <h2>Chapter Map · 一张图看完十章</h2>
+      <p>按你的<b>概要笔记</b>排布：每章一张卡，右侧是该章的概念与算法。点任意条目看<b>具体内容</b>（公式、推导、要点）；点章节卡跳到章节视图。</p>
+    </div>
+    <div class="map-hint">
+      <div class="legend">
+        <span><i style="background:var(--c-concept)"></i>概念</span>
+        <span><i style="background:var(--c-algo)"></i>算法</span>
+        <span><i style="background:var(--c-formula)"></i>公式</span>
+      </div>
+      <span>· 共 <b id="nodeCount">0</b> 个条目</span>
+      <button class="btn" id="compactBtn" style="margin-left:auto">紧凑模式</button>
+    </div>
+    <div class="map-scroll">
+      <div class="map-canvas" id="mapCanvas"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-chap">
+    <div class="board-head">
+      <h2>Chapter View · 逐章细读</h2>
+      <p>同一批内容按十章摊开，每章给出条目、要点与公式；点标题看完整详解。</p>
+    </div>
+    <div id="chapters"></div>
+  </section>
+
+  <section class="view" id="view-track">
+    <div class="board-head">
+      <h2>Track View · 三条方法论主线</h2>
+      <p>把十章重新按"模型→无模型、非增量→增量、表格→函数→策略"串起来，每格挂上对应条目。</p>
+    </div>
+    <div id="lanes"></div>
+  </section>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="dr-head">
+    <span class="kp" id="drKind">概念</span>
+    <h3 id="drTitle">—</h3>
+    <button class="dr-x" id="drClose" aria-label="关闭">×</button>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</aside>
+
+<!--DATA-->
+<!--KATEX_JS-->
+<!--AUTORENDER_JS-->
+<script>
+/* =====================================================================
+   渲染逻辑。内容全部来自 build/data/*.js（NODES / CHAPTERS / TRACKS）
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+const MAP = {};
+NODES.forEach(n => { MAP[n.id] = n; });
+
+const KIND_LABEL = { concept:'概念', algo:'算法', formula:'公式' };
+const KIND_COLOR = { concept:'var(--c-concept)', algo:'var(--c-algo)', formula:'var(--c-formula)' };
+
+function el(tag, cls, html){
+  const d = document.createElement(tag);
+  if(cls) d.className = cls;
+  if(html != null) d.innerHTML = html;
+  return d;
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function inline(s){
+  return mathify(esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>'));
+}
+/* 把 V_{k+1}、q_π 这类写法转成上下标，避免原始大括号外露 */
+function mathify(html){
+  return String(html)
+    .replace(/_\{([^{}]*)\}/g, '<sub>$1</sub>')
+    .replace(/\^\{([^{}]*)\}/g, '<sup>$1</sup>')
+    .replace(/_([tkijnmas\u03c0])(?![a-z])/g, '<sub>$1</sub>')
+    .replace(/\^([A-Za-z0-9+\-\u2212])(?![a-z])/g, '<sup>$1</sup>');
+}
+
+/* ---------------- 概要全图 ---------------- */
+const mapCanvas = $('#mapCanvas');
+
+function chipEl(n){
+  const c = el('div','chip');
+  c.style.setProperty('--kc', KIND_COLOR[n.kind] || KIND_COLOR.concept);
+  c.dataset.id = n.id;
+  c.dataset.search = (n.name + ' ' + (n.brief||'') + ' ' + (n.points||[]).join(' ')).toLowerCase();
+  c.innerHTML = `<div class="cn"><em>${KIND_LABEL[n.kind]||'概念'}</em>${mathify(esc(n.name))}</div>
+                 <div class="cb">${inline(n.brief||'')}</div>`;
+  c.addEventListener('click', () => openNode(n.id));
+  return c;
+}
+
+function buildMap(){
+  const root = el('div','mnode');
+  const rc = el('div','root-card');
+  rc.innerHTML = `<div class="k">MIND MAP</div><h3>强化学习的<br/>数学原理</h3>
+                  <div class="n">${CHAPTERS.length} 章 · ${NODES.length} 个条目</div>`;
+  root.appendChild(rc);
+
+  const kids = el('div','mkids');
+  CHAPTERS.forEach(ch => {
+    const m = el('div','mnode');
+    const lab = el('div','chap-card');
+    lab.style.setProperty('--c', ch.color);
+    lab.innerHTML = `<div class="n">CH ${String(ch.no).padStart(2,'0')}</div>
+                     <div class="t">${esc(ch.title)}</div>
+                     <div class="s">${esc(ch.note||'')}</div>`;
+    lab.addEventListener('click', () => gotoChapter(ch.no));
+    m.appendChild(lab);
+
+    const ks = el('div','mkids');
+    (ch.nodes||[]).forEach(id => {
+      const n = MAP[id];
+      if(n){
+        const w = el('div','mnode');
+        w.appendChild(chipEl(n));
+        ks.appendChild(w);
+      }
+    });
+    m.appendChild(ks);
+    kids.appendChild(m);
+  });
+  root.appendChild(kids);
+  mapCanvas.appendChild(root);
+}
+
+/* ---------------- 章节视图 ---------------- */
+function buildChapters(){
+  const host = $('#chapters');
+  CHAPTERS.forEach(ch => {
+    const card = el('article','chap');
+    card.id = 'ch' + ch.no;
+    card.style.setProperty('--c', ch.color);
+
+    const head = el('div','chap-head');
+    head.innerHTML = `<span class="num">CH ${String(ch.no).padStart(2,'0')}</span>
+      <div>
+        <h2 class="ch-title">${esc(ch.title)}</h2>
+        <div class="ch-en">${esc(ch.en||'')}</div>
+      </div>
+      <div class="ch-note">${mathify(esc(ch.note||''))}</div>
+      <span class="chev">▾</span>`;
+    head.addEventListener('click', () => card.classList.toggle('closed'));
+    card.appendChild(head);
+
+    const body = el('div','chap-body');
+    (ch.nodes||[]).forEach(id => {
+      const n = MAP[id];
+      if(!n) return;
+      const row = el('div','cnode');
+      row.style.setProperty('--kc', KIND_COLOR[n.kind] || KIND_COLOR.concept);
+      row.innerHTML = `<div class="cnode-h"><span class="kp" style="color:${KIND_COLOR[n.kind]||KIND_COLOR.concept}">${KIND_LABEL[n.kind]||'概念'}</span><b>${mathify(esc(n.name))}</b>
+                       <span class="more">详解 ›</span></div>
+                       ${n.brief ? `<p>${inline(n.brief)}</p>` : ''}
+                       ${(n.points||[]).length ? `<ul>${n.points.slice(0,3).map(p=>`<li>${inline(p)}</li>`).join('')}</ul>` : ''}`;
+      row.querySelector('.cnode-h').addEventListener('click', () => openNode(n.id));
+      body.appendChild(row);
+    });
+    card.appendChild(body);
+    host.appendChild(card);
+  });
+}
+
+/* ---------------- 主线视图 ---------------- */
+function buildTracks(){
+  const host = $('#lanes');
+  TRACKS.forEach(t => {
+    const lane = el('section','lane');
+    lane.style.setProperty('--lc', t.color || '#334155');
+    const head = el('div','lane-head');
+    head.innerHTML = `<span class="lane-idx">${esc(t.id)}</span><h3>${esc(t.name)}</h3><p>${esc(t.note||'')}</p>`;
+    lane.appendChild(head);
+
+    const chain = el('div','chain');
+    t.steps.forEach(s => {
+      if(s.bridge){
+        const b = el('div','bridge');
+        b.innerHTML = `<span class="lab">${esc(s.bridge)}</span><span class="arw"></span>`;
+        chain.appendChild(b);
+        return;
+      }
+      const ch = CHAPTERS.find(c => c.no === s.ch);
+      const c = el('div','step');
+      c.style.setProperty('--c', ch ? ch.color : '#475569');
+      const tags = (s.nodes||[]).map(id => MAP[id]).filter(Boolean)
+        .map(n => `<span class="stag" data-id="${n.id}">${mathify(esc(n.name))}</span>`).join('');
+      c.innerHTML = `<div class="sn">CH ${String(s.ch).padStart(2,'0')}</div>
+                     <div class="st">${esc(ch ? ch.title : '')}</div>
+                     ${s.label ? `<div class="sl">${esc(s.label)}</div>` : ''}
+                     <div class="stags">${tags}</div>`;
+      c.querySelectorAll('.stag').forEach(st => {
+        st.addEventListener('click', () => openNode(st.dataset.id));
+      });
+      chain.appendChild(c);
+    });
+    lane.appendChild(chain);
+    host.appendChild(lane);
+  });
+}
+
+/* ---------------- 抽屉 ---------------- */
+const drawer = $('#drawer');
+const scrim = $('#scrim');
+const drBody = $('#drBody');
+
+function openNode(id){
+  const n = MAP[id];
+  if(!n) return;
+  const ch = CHAPTERS.find(c => c.no === n.ch);
+  const kc = KIND_COLOR[n.kind] || KIND_COLOR.concept;
+  const kp = $('#drKind');
+  kp.textContent = KIND_LABEL[n.kind] || '概念';
+  kp.style.color = kc;
+  $('#drTitle').innerHTML = mathify(esc(n.name));
+
+  let html = '';
+  if(n.brief) html += `<div class="dr-brief" style="border-left-color:${kc}">${inline(n.brief)}</div>`;
+  html += `<div class="dr-meta">
+      ${ch ? `<span>第 ${ch.no} 章 · ${esc(ch.title)}</span>` : ''}
+      ${n.en ? `<span>${esc(n.en)}</span>` : ''}
+      ${n.tag ? `<span>${esc(n.tag)}</span>` : ''}
+    </div>`;
+  if(n.formulas && n.formulas.length){
+    html += `<div class="sec-t">公式</div>`;
+    n.formulas.forEach(f => { html += '<div class="fml">\\[' + esc(f) + '\\]</div>'; });
+  }
+  if(n.points && n.points.length){
+    html += `<div class="sec-t">具体内容</div><ul>`;
+    n.points.forEach(p => { html += `<li>${inline(p)}</li>`; });
+    html += `</ul>`;
+  }
+  if(n.warn) html += `<div class="sec-t">易错点</div><p style="font-size:13px;color:#8a5a00;background:#fff8e8;border-left:2px solid #d9a441;border-radius:0 8px 8px 0;padding:8px 12px;line-height:1.7;margin:0">${inline(n.warn)}</p>`;
+
+  const rel = (n.links||[]).map(x => MAP[x]).filter(Boolean);
+  if(rel.length){
+    html += `<div class="sec-t">相关</div><div class="rel">` +
+      rel.map(r => `<button data-id="${r.id}">${esc(r.name)}</button>`).join('') + `</div>`;
+  }
+  drBody.innerHTML = html;
+  drBody.scrollTop = 0;
+  drawer.classList.add('on');
+  scrim.classList.add('on');
+  drawer.setAttribute('aria-hidden','false');
+  if(window.renderMathInElement){
+    renderMathInElement(drBody, {
+      delimiters:[{left:'\\[',right:'\\]',display:true},{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
+      throwOnError:false, strict:false
+    });
+  }
+  drBody.querySelectorAll('.rel button').forEach(b => {
+    b.addEventListener('click', () => openNode(b.dataset.id));
+  });
+}
+
+function closeDrawer(){
+  drawer.classList.remove('on');
+  scrim.classList.remove('on');
+  drawer.setAttribute('aria-hidden','true');
+}
+$('#drClose').addEventListener('click', closeDrawer);
+scrim.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
+
+/* ---------------- 视图切换 ---------------- */
+function setView(v){
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.view === v));
+  document.querySelectorAll('.view').forEach(s => s.classList.toggle('on', s.id === 'view-' + v));
+  document.querySelector('.zoomer').style.display = (v === 'map') ? '' : 'none';
+  document.querySelector('.map-hint').style.display = (v === 'map') ? '' : 'none';
+  document.querySelector('.search').style.display = (v === 'map') ? '' : 'none';
+  document.querySelector('.hits').style.display = (v === 'map') ? '' : 'none';
+  try{ history.replaceState(null,'','#'+v); }catch(e){}
+}
+document.querySelectorAll('.tab').forEach(b => {
+  b.addEventListener('click', () => setView(b.dataset.view));
+});
+
+function gotoChapter(no){
+  setView('chap');
+  const card = $('#ch' + no);
+  if(card){
+    card.classList.remove('closed');
+    setTimeout(() => card.scrollIntoView({behavior:'smooth', block:'start'}), 40);
+  }
+}
+
+/* ---------------- 缩放 ---------------- */
+let zoom = 1;
+function applyZoom(){
+  mapCanvas.style.zoom = zoom;
+  $('#zoomVal').textContent = Math.round(zoom*100) + '%';
+}
+$('#zoomIn').addEventListener('click', () => { zoom = Math.min(1.4, zoom + .1); applyZoom(); });
+$('#zoomOut').addEventListener('click', () => { zoom = Math.max(0.5, zoom - .1); applyZoom(); });
+$('#compactBtn').addEventListener('click', e => {
+  const on = mapCanvas.classList.toggle('compact');
+  e.currentTarget.textContent = on ? '舒适模式' : '紧凑模式';
+});
+
+/* ---------------- 搜索 ---------------- */
+const qEl = $('#q'), hitsEl = $('#hits');
+let hits = [];
+function runSearch(){
+  const kw = qEl.value.trim().toLowerCase();
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('dim','hit'));
+  hits = [];
+  if(!kw){ hitsEl.textContent = ''; return; }
+  document.querySelectorAll('.chip').forEach(c => {
+    const ok = (c.dataset.search||'').includes(kw);
+    if(ok){ c.classList.add('hit'); hits.push(c); } else { c.classList.add('dim'); }
+  });
+  hitsEl.textContent = hits.length ? hits.length + ' 项' : '无匹配';
+}
+let tmr;
+qEl.addEventListener('input', () => { clearTimeout(tmr); tmr = setTimeout(runSearch, 200); });
+qEl.addEventListener('keydown', e => { if(e.key === 'Escape'){ qEl.value=''; runSearch(); qEl.blur(); } });
+
+/* ---------------- 启动 ---------------- */
+buildMap();
+buildChapters();
+buildTracks();
+$('#nodeCount').textContent = NODES.length;
+$('#subtitle').textContent = `赵世钰｜${CHAPTERS.length} 章 · ${NODES.length} 个概念与算法`;
+applyZoom();
+const startView = (location.hash || '').replace('#','');
+if(['chap','track'].includes(startView)) setView(startView);
+const deep = /[?&]open=([\w\-]+)/.exec(location.search || '');
+if(deep && MAP[deep[1]]) openNode(deep[1]);
+</script>
+</body>
+</html>
