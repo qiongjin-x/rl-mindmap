@@ -42,11 +42,13 @@ build/check_tex.js      用真实 KaTeX 逐条编译公式
 ## 本地构建
 
 ```bash
-python build/fetch_assets.py   # 首次：拉取 KaTeX 0.16.11
-python build/build.py          # 生成 ../强化学习的数学原理_思维导图.html
-node build/smoke.js            # 校验：无坏链 / 无游离节点 / 章节卡渲染
-node build/check_tex.js        # 校验：67 条公式全部可编译
+python build/fetch_assets.py     # 首次：拉取 KaTeX 0.16.11
+python build/build.py index.html # 生成 index.html（Pages 入口）
+node build/smoke.js              # 校验：无坏链 / 无游离节点 / 章节卡渲染
+node build/check_tex.js          # 校验：67 条公式全部可编译
 ```
+
+> 不带参数时 `build.py` 会输出到上一级目录的 `强化学习的数学原理_思维导图.html`（桌面单机版用法）。
 
 `build/data/*.js` 的数据结构：
 
